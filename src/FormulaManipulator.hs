@@ -48,11 +48,12 @@ foldE baseConst baseVar stepPlus stepMult = rec
              rec  (Plus eq1 eq2) = stepPlus (rec eq1) (rec eq2)
              rec  (Mult eq1 eq2) = stepMult (rec eq1) (rec eq2)
 
-{-|
-  The `printE` function takes an expression as input and returns the pretty-printed expression.
-  It takes one argument of type Expr. 
-  It returns a String.
--}
+-- | The `printE` function takes an expression as input and returns the pretty-printed expression.
+--
+-- It takes one argument of type Expr. 
+--
+-- It returns a String.
+
 printE :: Expr String Int -- ^ The Expr argument
        -> String -- ^ The return String
 printE = foldE printConst id printPlus printMult
