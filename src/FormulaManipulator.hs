@@ -17,7 +17,7 @@ module FormulaManipulator
   )
 where
 
-import ExprLanguage ( Expr(..) )
+import ExprLanguage (Expr(Var, Const, Plus, Mult), parseExpr)
 
 {-Has extra inputs: 
   -baseConst for the function to apply when reaching a constant, 
@@ -49,7 +49,7 @@ printE = foldE printConst id printPlus printMult
       printPlus :: String -> String -> String
       printPlus a b = "(" ++ a ++ " + " ++ b ++ ")"
       printMult :: String -> String -> String
-      printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
+      printMult a b = a ++ " * " ++ b
 
 --evalE :: Expr b a -> a
 evalE     = foldE evalConst evalVar evalPlus evalMult --error "Implement, document, and test this function"
