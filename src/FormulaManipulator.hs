@@ -7,6 +7,7 @@ Copyright   : STUDENT NAME 1 (ID)
 `FormulaManipulator` offers functions to manipulate, evaluate, and print
 formulas and expressions represented by `Expr` values.
 -}
+
 module FormulaManipulator
   ( foldE
   , printE
@@ -16,10 +17,10 @@ module FormulaManipulator
   )
 where
 
-import ExprLanguage (Expr(Var, Const, Plus, Mult) )
+import ExprLanguage ( Expr(..) )
 
 {-Has extra inputs: 
-  -baseConstant for the function to apply when reaching a constant, 
+  -baseConst for the function to apply when reaching a constant, 
   -baseVar for the function to apply when reaching a constant,
   -stepPlus for the function to apply when reaching a plus
   -stepMul for the function to apply when reaching a multiply
@@ -33,15 +34,22 @@ foldE baseConst baseVar stepPlus stepMult = rec
              rec  (Plus eq1 eq2) = stepPlus (rec eq1) (rec eq2)
              rec  (Mult eq1 eq2) = stepMult (rec eq1) (rec eq2)
 
-printE :: Expr String Int -> String
+{-|
+  The `printE` function takes an expression as input and returns the pretty-printed expression.
+  It takes one argument of type Expr. 
+  It returns a String.
+-}
+printE :: Expr String Int -- ^ The Expr argument
+       -> String -- ^ The return String
 printE = foldE printConst id printPlus printMult
-printConst :: Int -> String
-printConst n | head (show n) == '-' = "(" ++ show n ++ ")" 
-             | otherwise = show n
-printPlus :: String -> String -> String
-printPlus a b = "(" ++ a ++ " + " ++ b ++ ")"
-printMult :: String -> String -> String
-printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
+    where
+      printConst :: Int -> String
+      printConst n  | head (show n) == '-' = "(" ++ show n ++ ")" 
+                    | otherwise = show n
+      printPlus :: String -> String -> String
+      printPlus a b = "(" ++ a ++ " + " ++ b ++ ")"
+      printMult :: String -> String -> String
+      printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
 
 --evalE :: Expr b a -> a
 evalE     = foldE evalConst evalVar evalPlus evalMult --error "Implement, document, and test this function"
