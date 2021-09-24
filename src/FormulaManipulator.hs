@@ -1,7 +1,7 @@
 {-|
 Module      : FormulaManipulator
 Description : Manipulate formulas and expressions represented by `Expr` values
-Copyright   : STUDENT NAME 1 (ID)
+Copyright   : Mennolt van Alten (1289667)
               STUDENT NAME 2 (ID)
 
 `FormulaManipulator` offers functions to manipulate, evaluate, and print
@@ -18,14 +18,28 @@ where
 
 import ExprLanguage (Expr(Var, Const, Plus, Mult) )
 
-{-Has extra inputs: 
-  -baseConstant for the function to apply when reaching a constant, 
-  -baseVar for the function to apply when reaching a constant,
-  -stepPlus for the function to apply when reaching a plus
-  -stepMul for the function to apply when reaching a multiply
-  -}
 
-foldE :: (c -> a) -> (b -> a) -> (a -> a -> a) -> (a -> a -> a) -> Expr b c -> a
+
+-- | The foldE function is a catamorphism for the type Expr.
+-- 
+-- It has 4 inputs: 
+-- 
+{-| 
+
+  * baseConstant is the function to apply when reaching a constant. 
+    It must convert a numeric type to the chosen output type.
+
+  * baseVar is the function to apply when reaching a variable. 
+    It must convert a String to the chosen output type.
+
+  * stepPlus is the function to apply when reaching a plus. 
+    It will be applied on the outputs of a recursion on the two equations and must convert two values of the chosen output type into one value of that type.
+
+  * stepMul is the function to apply when reaching a multiply
+    It will be applied on the outputs of a recursion on the two equations and must convert two values of the chosen output type into one value of that type.
+
+  -}
+foldE :: (Num c) => (c -> a) -> (b -> a) -> (a -> a -> a) -> (a -> a -> a) -> Expr b c -> a
 foldE baseConst baseVar stepPlus stepMult = rec
             where
              rec  (Var i) = baseVar i
@@ -44,6 +58,10 @@ printMult :: String -> String -> String
 printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
 
 --evalE :: Expr b a -> a
+-- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
+-- It is implemented using foldE and the 4 functions below.
+-- 
+-- Note: Current implementation does not support variable lookup.
 evalE     = foldE evalConst evalVar evalPlus evalMult --error "Implement, document, and test this function"
 
 evalConst :: a -> a
