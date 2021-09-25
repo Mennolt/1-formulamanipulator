@@ -14,6 +14,7 @@ module FormulaManipulator
   , evalE
   , simplifyE
   , diffE
+  , evalConst, evalVar, evalPlus, evalMult
   )
 where
 
