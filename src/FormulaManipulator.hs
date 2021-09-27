@@ -14,7 +14,7 @@ module FormulaManipulator
   , evalE
   , simplifyE
   , diffE
-  , evalConst, evalVar, evalPlus, evalMult
+  , evalConst, evalPlus, evalMult
   )
 where
 
@@ -44,8 +44,8 @@ import ExprLanguage (Expr(Var, Const, Plus, Mult), parseExpr)
 foldE :: (Num c) => (c -> a) -> (b -> a) -> (a -> a -> a) -> (a -> a -> a) -> Expr b c -> a
 foldE baseConst baseVar stepPlus stepMult = rec
             where
-             rec  (Var i) = baseVar i
              rec  (Const i) = baseConst i
+             rec  (Var i) = baseVar i
              rec  (Plus eq1 eq2) = stepPlus (rec eq1) (rec eq2)
              rec  (Mult eq1 eq2) = stepMult (rec eq1) (rec eq2)
 
@@ -72,17 +72,16 @@ printE = foldE printConst id printPlus printMult
 -- It is implemented using foldE and the 4 functions below.
 -- 
 -- Note: Current implementation does not support variable lookup.
-evalE     = foldE evalConst evalVar evalPlus evalMult --error "Implement, document, and test this function"
+evalE :: (a -> Int) -> (Expr a Int) -> Int
+evalE lookup = foldE evalConst lookup evalPlus evalMult
 
-evalConst :: a -> a
+evalConst :: Int -> Int
 evalConst = id
 
-evalVar lookup = lookup--to be improved
-
-evalPlus :: (Num a) => a -> a -> a
+evalPlus :: Int -> Int -> Int
 evalPlus = (+) 
 
-evalMult :: (Num a) => a -> a -> a
+evalMult :: Int -> Int -> Int
 evalMult = (*)
 
 simplifyE = error "Implement, document, and test this function"

@@ -7,7 +7,7 @@ import           FormulaManipulator             ( foldE
                                                 , evalE
                                                 , simplifyE
                                                 , diffE
-                                                , evalConst, evalVar, evalPlus, evalMult
+                                                , evalConst, evalPlus, evalMult
                                                 )
 import           FormulatorCLI                  ( processCLIArgs )
 
@@ -17,7 +17,7 @@ main = hspec $ do
 
     describe "foldE" $ do
       it "should evaluate the parsed expression \"1+1\" when provided with all the functions to make evalE, returning 2" $ do
-        foldE evalConst evalVar evalPlus evalMult (Plus (Const 1)  (Const 1)) `shouldBe` 2 --parseExpr "1+1"
+        foldE evalConst id evalPlus evalMult (Plus (Const 1)  (Const 1)) `shouldBe` 2
 
     describe "printE" $ do  
       it "should convert (Var \"x\") to \"x\"" $ do
