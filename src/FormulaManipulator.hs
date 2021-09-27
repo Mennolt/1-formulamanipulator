@@ -84,5 +84,27 @@ evalPlus = (+)
 evalMult :: Int -> Int -> Int
 evalMult = (*)
 
-simplifyE = error "Implement, document, and test this function"
+simplifyE :: Expr String Int -> Expr String Int
+simplifyE = foldE Const Var simplPlus simplMult
+
+simplPlus :: Expr String Int ->  Expr String Int ->  Expr String Int
+simplPlus (Var a) (Const 0) = Var a
+simplPlus (Const 0) (Var b) = Var b
+simplPlus (Const a) (Const b) = Const (a+b)
+simplPlus (Var a) (Var b) = Plus (Var a) (Var b)
+simplPlus (Var a) (Const b) = Plus (Var a) (Const b)
+simplPlus (Const a) (Var b) = Plus (Const a) (Var b) 
+simplPlus a b = Plus a b
+
+
+simplMult :: Expr String Int ->  Expr String Int ->  Expr String Int
+simplMult (Var a) (Const 1) = Var a
+simplMult (Const 1) (Var b) = Var b
+simplMult (Var a) (Const 0) = Const 0
+simplMult (Const 0) (Var b) = Const 0
+simplMult (Const a) (Const b) = Const (a*b)
+simplMult (Var a) (Var b) = Mult (Var a) (Var b)
+simplMult (Var a) (Const b) = Mult (Var a) (Const b)
+simplMult (Const a) (Var b) = Mult (Const a) (Var b) 
+simplMult a b = Mult a b
 diffE     = error "Implement, document, and test this function"

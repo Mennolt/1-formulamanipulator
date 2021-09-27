@@ -61,7 +61,7 @@ main = hspec $ do
 
     describe "evalE" $ do
       it "should have tests" $ do
-        (1 :: Integer) `shouldBe` (1 :: Integer)
+        evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Int)
 
     describe "simplifyE" $ do
       it "should have tests" $ do
