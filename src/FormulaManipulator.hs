@@ -55,7 +55,7 @@ foldE baseConst baseVar stepPlus stepMult = rec
 --
 -- It returns a String.
 
-printE :: Expr String Int -- ^ The Expr argument
+printE :: Expr String Int -- ^ The input Expression
        -> String -- ^ The return String
 printE = foldE printConst id printPlus printMult
     where
@@ -83,7 +83,44 @@ evalPlus = (+)
 evalMult :: Int -> Int -> Int
 evalMult = (*)
 
-simplifyE = error "Implement, document, and test this function"
+
+
+
+{-| The `simplifyE` function takes an expression as input and returns the simplified expression.
+
+  It takes one argument of type Expr. 
+
+  It returns an Expression.
+
+  Expressions are simplified according to the following scheme:
+    
+    * (∀ x: Num x: 0 + x = x)
+    * (∀ x: Num x: 0 * x = 0)
+    * (∀ x: Num x: 1 * x = x)
+  
+  Constant expressions are evaluated:
+  
+    * 3 * 15 is simplified to 45
+    * 7 + 12 is simplified to 19
+-}
+simplifyE :: Expr String Int -> Expr String Int
+simplifyE = foldE Const Var simplPlus simplMult
+
+simplPlus :: Expr String Int ->  Expr String Int ->  Expr String Int
+simplPlus (Var a) (Const 0) = Var a
+simplPlus (Const 0) (Var b) = Var b
+simplPlus (Const a) (Const b) = Const (a+b)
+simplPlus a b = Plus a b
+
+simplMult :: Expr String Int ->  Expr String Int ->  Expr String Int
+simplMult (Var a) (Const 1) = Var a
+simplMult (Const 1) (Var b) = Var b
+simplMult _ (Const 0) = Const 0
+simplMult (Const 0) _ = Const 0
+simplMult (Const a) (Const b) = Const (a*b)
+simplMult a b = Mult a b
+
+
 
 diffE :: String -> Expr String Integer -> (Expr String Integer, Expr String Integer)
 -- dv :: String

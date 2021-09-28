@@ -66,10 +66,21 @@ main = hspec $ do
       it "should convert (Mult (Const 3) (Const 4)) to 12" $ do
         evalE id (Mult (Const 3) (Const 4)) `shouldBe` (12 :: Int)
       
+      it "should have tests" $ do
+        evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Int)
 
     describe "simplifyE" $ do
-      it "should have tests" $ do
-        (1 :: Integer) `shouldBe` (1 :: Integer)
+      it "should simplify Plus (Const 1) (Const 1) to Const 2" $ do
+        simplifyE (Plus (Const 1) (Const 1)) `shouldBe` (Const 2:: Expr String Int)
+      it "should simplify Plus (Var \"x\") (Const 0) to Var \"x\"" $ do
+        simplifyE (Plus (Var "x") (Const 0)) `shouldBe` (Var "x":: Expr String Int)
+      it "should simplify Mult (Const 2) (Const 2) to Const 4" $ do
+        simplifyE (Plus (Const 2) (Const 2)) `shouldBe` (Const 4:: Expr String Int)
+      it "should simplify Mult (Var \"x\") (Const 0) to Const 0" $ do
+        simplifyE (Mult (Var "x") (Const 0)) `shouldBe` (Const 0:: Expr String Int)
+      it "should simplify Mult (Var \"x\") (Const 1) to Var \"x\"" $ do
+        simplifyE (Mult (Var "x") (Const 1)) `shouldBe` (Var "x":: Expr String Int)
+
 
     describe "diffE" $ do
       it "should have tests" $ do
