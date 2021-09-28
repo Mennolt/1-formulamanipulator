@@ -69,10 +69,9 @@ printE = foldE printConst id printPlus printMult
 
 --evalE :: Expr b a -> a
 -- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
--- It is implemented using foldE and the 4 functions below.
--- 
--- Note: Current implementation does not support variable lookup.
-evalE :: (a -> Int) -> Expr a Int -> Int
+-- It is implemented using foldE and the 3 functions below.
+
+evalE :: (a -> Int) -> (Expr a Int) -> Int
 evalE lookup = foldE evalConst lookup evalPlus evalMult
 
 evalConst :: Int -> Int
@@ -83,6 +82,8 @@ evalPlus = (+)
 
 evalMult :: Int -> Int -> Int
 evalMult = (*)
+
+
 
 
 {-| The `simplifyE` function takes an expression as input and returns the simplified expression.
@@ -119,4 +120,25 @@ simplMult (Const 0) _ = Const 0
 simplMult (Const a) (Const b) = Const (a*b)
 simplMult a b = Mult a b
 
-diffE     = error "Implement, document, and test this function"
+
+
+diffE :: String -> Expr String Integer -> (Expr String Integer, Expr String Integer)
+-- dv :: String
+diffE dv   = foldE diffConst diffVar diffPlus diffMult dv
+-- dv: variable to derive upon
+
+diffConst :: String -> Expr String Integer -> (Expr String Integer, Expr String Integer)
+diffConst dv i = (i, (Const 0))
+
+diffVar :: String -> String -> (Expr String Integer, Expr String Integer) 
+diffVar dv var = if dv == var then ((Var var), (Const 1)) else ((Var var), (Var var))
+
+diffPlus :: String -> (Expr String Integer, Expr String Integer) -> 
+  (Expr String Integer, Expr String Integer) ->
+  (Expr String Integer, Expr String Integer)
+diffPlus dv eq1 eq2 =((Plus (fst eq1) (fst eq2)), (Plus (snd eq1) (snd eq2)))
+
+diffMult :: String -> (Expr String Integer, Expr String Integer) -> 
+  (Expr String Integer, Expr String Integer) ->
+  (Expr String Integer, Expr String Integer)
+diffMult dv eq1 eq2 = ((Mult (fst eq1) (fst eq2)), ((Mult (fst eq1) (snd eq2)) + (Mult (snd eq1) (fst eq2)))) 
