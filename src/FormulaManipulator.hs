@@ -118,4 +118,5 @@ simplMult _ (Const 0) = Const 0
 simplMult (Const 0) _ = Const 0
 simplMult (Const a) (Const b) = Const (a*b)
 simplMult a b = Mult a b
+
 diffE     = error "Implement, document, and test this function"
