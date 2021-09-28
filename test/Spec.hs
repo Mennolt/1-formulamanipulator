@@ -60,6 +60,12 @@ main = hspec $ do
         `shouldBe` (Right(Mult (Plus (Var "x") (Const (-1))) (Plus (Var "x") (Const 1))) :: Either ParseError (Expr String Integer))
 
     describe "evalE" $ do
+      it "should convert (Plus (Const 1) (Const 1)) to 2" $ do
+        evalE id (Plus (Const 1) (Const 1)) `shouldBe` (2 :: Int)
+
+      it "should convert (Mult (Const 3) (Const 4)) to 12" $ do
+        evalE id (Mult (Const 3) (Const 4)) `shouldBe` (12 :: Int)
+      
       it "should have tests" $ do
         evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Int)
 
