@@ -124,11 +124,11 @@ simplMult a b = Mult a b
 
 diffE :: String -> Expr String Integer -> (Expr String Integer, Expr String Integer)
 -- dv :: String
-diffE dv   = foldE diffConst diffVar diffPlus diffMult dv
+diffE dv = foldE (diffConst dv) (diffVar dv ) (diffPlus dv) (diffMult dv)
 -- dv: variable to derive upon
 
-diffConst :: String -> Expr String Integer -> (Expr String Integer, Expr String Integer)
-diffConst dv i = (i, (Const 0))
+diffConst :: String -> Integer -> (Expr String Integer, Expr String Integer)
+diffConst dv i = (Const i, (Const 0))
 
 diffVar :: String -> String -> (Expr String Integer, Expr String Integer) 
 diffVar dv var = if dv == var then ((Var var), (Const 1)) else ((Var var), (Var var))
@@ -141,4 +141,4 @@ diffPlus dv eq1 eq2 =((Plus (fst eq1) (fst eq2)), (Plus (snd eq1) (snd eq2)))
 diffMult :: String -> (Expr String Integer, Expr String Integer) -> 
   (Expr String Integer, Expr String Integer) ->
   (Expr String Integer, Expr String Integer)
-diffMult dv eq1 eq2 = ((Mult (fst eq1) (fst eq2)), ((Mult (fst eq1) (snd eq2)) + (Mult (snd eq1) (fst eq2)))) 
+diffMult dv eq1 eq2 = ((Mult (fst eq1) (fst eq2)), (Plus (Mult (fst eq1) (snd eq2)) (Mult (snd eq1) (fst eq2))))
