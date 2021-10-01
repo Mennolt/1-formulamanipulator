@@ -66,7 +66,7 @@ main = hspec $ do
       it "should convert (Mult (Const 3) (Const 4)) to 12" $ do
         evalE id (Mult (Const 3) (Const 4)) `shouldBe` (12 :: Integer)
       
-      it "should have tests" $ do
+      it "should convert (Mult (Var \"x\") (Const 3) where x = 4 to 12" $ do
         evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Integer)
 
     describe "simplifyE" $ do
@@ -121,25 +121,29 @@ main = hspec $ do
       it "should simplify [\"-s\", \"1+0\"] to 1" $ do
         processCLIArgs ["-s", "1+0"] `shouldBe` "1"
       it "should simplify [\"--simplify\", \"1+0\"] to 1" $ do
-        processCLIArgs ["-s", "1+0"] `shouldBe` "1"
+        processCLIArgs ["--simplify", "1+0"] `shouldBe` "1"
       it "should simplify [\"-s\", \"5+6\"] to 11" $ do
         processCLIArgs ["-s", "5+6"] `shouldBe` "11"
       it "should simplify [\"--simplify\", \"5+6\"] to 11" $ do
-        processCLIArgs ["-s", "5+6"] `shouldBe` "11"
+        processCLIArgs ["--simplify", "5+6"] `shouldBe` "11"
       it "should simplify [\"-s\", \"5*6\"] to 30" $ do
         processCLIArgs ["-s", "5*6"] `shouldBe` "30"
       it "should simplify [\"--simplify\", \"5*6\"] to 30" $ do
-        processCLIArgs ["-s", "5*6"] `shouldBe` "30"
+        processCLIArgs ["--simplify", "5*6"] `shouldBe` "30"
         
       it "should simplify [\"-s\", \"0*x\"] to 0" $ do
         processCLIArgs ["-s", "0*x"] `shouldBe` "0"
       it "should simplify [\"--simplify\", \"0*x\"] to 0" $ do
-        processCLIArgs ["-s", "0*x"] `shouldBe` "0"
+        processCLIArgs ["--simplify", "0*x"] `shouldBe` "0"
 
       it "should simplify [\"-s\", \"1*x\"] to x" $ do
         processCLIArgs ["-s", "1*x"] `shouldBe` "x"
       it "should simplify [\"--simplify\", \"1*x\"] to x" $ do
-        processCLIArgs ["-s", "1*x"] `shouldBe` "x"
+        processCLIArgs ["--simplify", "1*x"] `shouldBe` "x"
+
+        
+
+      
 
       
 
