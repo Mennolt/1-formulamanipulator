@@ -67,10 +67,13 @@ printE = foldE printConst id printPlus printMult
       printMult :: String -> String -> String
       printMult a b = a ++ " * " ++ b
 
---evalE :: Expr b a -> a
--- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
--- It is implemented using foldE and the 3 functions below.
 
+{- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
+
+  It takes two arguments: one converting the type of a variable into an integer, and one of type Expr that will be evaluated.
+
+  It returns an integer.
+-}
 evalE :: (a -> Int) -> (Expr a Int) -> Int
 evalE lookup = foldE evalConst lookup evalPlus evalMult
 
@@ -121,7 +124,17 @@ simplMult (Const a) (Const b) = Const (a*b)
 simplMult a b = Mult a b
 
 
+{-|
+The diffE function is used to differentiate an expression. 
 
+It takes a string and an expression as input and outputs a tuple of expressions.
+
+The string determines what variable to differentiate the expression over.
+
+The output contains first the original expression, then second its derivative.
+
+It is suggested to simplify after using this function, because especially products can become a long equation.
+-}
 diffE :: String -> Expr String Integer -> (Expr String Integer, Expr String Integer)
 -- dv :: String
 diffE dv = foldE (diffConst dv) (diffVar dv ) (diffPlus dv) (diffMult dv)
