@@ -83,8 +83,20 @@ main = hspec $ do
 
 
     describe "diffE" $ do
-      it "should have tests" $ do
-        (1 :: Integer) `shouldBe` (1 :: Integer)
+      it "Constant derivation: should differentiate Const 1 to Const 0" $ do
+        diffE "x" (Const 1) `shouldBe` (Const 1, Const 0)
+      
+      it "Variable derivation: should differentiate Var \"x\" to Const 1" $ do
+        diffE "x" (Var "x") `shouldBe` (Var "x", Const 1)
+
+      it "Variable derivation: differentiation over \"x\" should differentiate Var \"y\" to Var \"y\"" $ do
+        diffE "x" (Var "y") `shouldBe` (Var "y", Var "y")
+
+      it "Sum derivation test: should differentiate (Plus (Const 1) (Var \"x\")) to  Const 1" $ do
+        diffE "x" (Plus (Const 1) (Var "x")) `shouldBe` (Plus (Const 1) (Var "x"),Plus (Const 0) (Const 1))
+
+      it "Product derivation test: should differentiate (Mult (Const 1) (Var \"x\")) to  Const 1" $ do
+        diffE "x" (Mult (Const 1) (Var "x")) `shouldBe` (Mult (Const 1) (Var "x"),Plus (Mult (Const 1) (Const 1)) (Mult (Const 0) (Var "x")))
 
   describe "FormulatorCLI" $ do
     describe "processCLIArgs" $ do
