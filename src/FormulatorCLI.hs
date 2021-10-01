@@ -35,26 +35,19 @@ The output is a single string that will be printed to the commandline, usually a
 processCLIArgs :: [String] -> String
 processCLIArgs as | as!!0 == "-p" || as!!0 == "--print" = display (as!!1)
                   | as!!0 == "-s" || as!!0 == "--simplify" = simplify (as!!1)
-<<<<<<< HEAD
                   | as!!0 == "-d" || as!!0 == "--differentiate" = diff (as!!1) (as!!2)
                   | as!!0 == "-e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
                   | as!!0 == "-h" || as!!0 == "--help" = help
                   | otherwise = error "Unexpected option, use -h to display help"
-=======
-                  | as!!0 == "-d" || as!!0 == "--differentiate" = diff (as!!2) (as!!1)
-                  | as!!0 == "-e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
-                  | as!!0 == "-h" || as!!0 == "--help" = help
-                  | otherwise = error "Unexpected option"
->>>>>>> f7d59cf656eeea45a7912ccb4b156febda953d9d
                     where
-                      help = "Usage: \
-                              \formulator -- OPTION EXPR\n\
-                              \-p, --print: pretty-print the expression\n\
-                              \-s, --simplify: simplify and pretty-print the expression\n\
-                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \n\
-                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table.\n\
-                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons.\n\
-                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\n\
+                      help = "- Usage: \
+                              \formulator -- OPTION EXPR \
+                              \-p, --print: pretty-print the expression \
+                              \-s, --simplify: simplify and pretty-print the expression \
+                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \
+                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table. \
+                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons. \
+                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\
                               \h, --help: Show this help message."
 
 display :: String -> String
