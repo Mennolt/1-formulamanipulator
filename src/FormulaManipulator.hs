@@ -55,32 +55,32 @@ foldE baseConst baseVar stepPlus stepMult = rec
 --
 -- It returns a String.
 
-printE :: Expr String Int -- ^ The input Expression
+printE :: Expr String Integer -- ^ The input Expression
        -> String -- ^ The return String
 printE = foldE printConst id printPlus printMult
     where
-      printConst :: Int -> String
+      printConst :: Integer -> String
       printConst n  | head (show n) == '-' = "(" ++ show n ++ ")" 
                     | otherwise = show n
       printPlus :: String -> String -> String
       printPlus a b = "(" ++ a ++ " + " ++ b ++ ")"
       printMult :: String -> String -> String
-      printMult a b = a ++ " * " ++ b
+      printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
 
 --evalE :: Expr b a -> a
 -- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
 -- It is implemented using foldE and the 3 functions below.
 
-evalE :: (a -> Int) -> (Expr a Int) -> Int
+evalE :: (a -> Integer) -> (Expr a Integer) -> Integer
 evalE lookup = foldE evalConst lookup evalPlus evalMult
 
-evalConst :: Int -> Int
+evalConst :: Integer -> Integer
 evalConst = id
 
-evalPlus :: Int -> Int -> Int
+evalPlus :: Integer -> Integer -> Integer
 evalPlus = (+) 
 
-evalMult :: Int -> Int -> Int
+evalMult :: Integer -> Integer -> Integer
 evalMult = (*)
 
 
@@ -103,16 +103,16 @@ evalMult = (*)
     * 3 * 15 is simplified to 45
     * 7 + 12 is simplified to 19
 -}
-simplifyE :: Expr String Int -> Expr String Int
+simplifyE :: Expr String Integer -> Expr String Integer
 simplifyE = foldE Const Var simplPlus simplMult
 
-simplPlus :: Expr String Int ->  Expr String Int ->  Expr String Int
+simplPlus :: Expr String Integer ->  Expr String Integer ->  Expr String Integer
 simplPlus (Var a) (Const 0) = Var a
 simplPlus (Const 0) (Var b) = Var b
 simplPlus (Const a) (Const b) = Const (a+b)
 simplPlus a b = Plus a b
 
-simplMult :: Expr String Int ->  Expr String Int ->  Expr String Int
+simplMult :: Expr String Integer ->  Expr String Integer ->  Expr String Integer
 simplMult (Var a) (Const 1) = Var a
 simplMult (Const 1) (Var b) = Var b
 simplMult _ (Const 0) = Const 0

@@ -24,4 +24,49 @@ import           FormulaManipulator             ( printE
                                                 , diffE
                                                 )
 
-processCLIArgs as = "Implement, document, and test this function"
+
+processCLIArgs :: [String] -> String
+processCLIArgs as | as!!0 == "--p" || as!!0 == "--print" = display (as!!1)
+                  | as!!0 == "--s" || as!!0 == "--simplify" = simplify (as!!1)
+                  | as!!0 == "--d" || as!!0 == "--differentiate" = diff (as!!2) (as!!1)
+                  | as!!0 == "--e" || as!!0 == "--evaluate" || as!!0 == "--e" = evalE (getLookup ( splitArgs as!!1)) (as!!2))
+                  | as!!0 == "--h" || as!!0 == "--help" = help
+                  | otherwise = error "Unexpected option"
+                    where
+                      help = "- Usage: \
+                              \formulator -- OPTION EXPR \
+
+                              \-p, --print: pretty-print the expression \
+                              \-s, --simplify: simplify and pretty-print the expression \
+                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \
+                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table. \
+                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons. \
+                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\
+                              \h, --help: Show this help message."
+
+display :: String -> String
+display s = case (parseExpr s) of
+                  Left  err   -> show err
+                  Right expr  -> printE expr
+
+simplify :: String -> String
+simplify s = case (parseExpr s) of
+                  Left  err   -> show err
+                  Right expr  -> printE (simplifyE expr)
+
+diff :: String -> String -> String
+diff var s = case (parseExpr s) of
+                  Left  err   -> show err
+                  Right expr  -> printE (simplifyE (snd (diffE var expr)))
+
+-- splits a string of statements delimited into
+splitArgs :: String -> [String]
+splitArgs = splitOn ";"
+
+-- creates a lookup function from a list of statements in shape "x=5"
+getLookup :: [String] -> String -> Integer
+getLookup [] a = error "unknown variable"
+getLookup (var : vars) a = if a == v then c else getLookup vars a
+                        where
+                          v = head (splitOn "=" var)
+                          c = read ((splitOn "=" var)!!1) :: Integer
