@@ -65,7 +65,8 @@ printE = foldE printConst id printPlus printMult
       printPlus :: String -> String -> String
       printPlus a b = "(" ++ a ++ " + " ++ b ++ ")"
       printMult :: String -> String -> String
-      printMult a b = a ++ " * " ++ b
+      printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
+
 
 
 {- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
@@ -74,7 +75,9 @@ printE = foldE printConst id printPlus printMult
 
   It returns an integer.
 -}
+
 evalE :: (a -> Integer) -> (Expr a Integer) -> Integer
+
 evalE lookup = foldE evalConst lookup evalPlus evalMult
 
 evalConst :: Integer -> Integer
