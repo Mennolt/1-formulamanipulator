@@ -29,7 +29,7 @@ processCLIArgs :: [String] -> String
 processCLIArgs as | as!!0 == "--p" || as!!0 == "--print" = display (as!!1)
                   | as!!0 == "--s" || as!!0 == "--simplify" = simplify (as!!1)
                   | as!!0 == "--d" || as!!0 == "--differentiate" = diff (as!!2) (as!!1)
-                  | as!!0 == "--e" || as!!0 == "--evaluate" || as!!0 == "--e" = evalE (getLookup ( splitArgs as!!1)) (as!!2))
+                  | as!!0 == "--e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
                   | as!!0 == "--h" || as!!0 == "--help" = help
                   | otherwise = error "Unexpected option"
                     where
@@ -70,3 +70,8 @@ getLookup (var : vars) a = if a == v then c else getLookup vars a
                         where
                           v = head (splitOn "=" var)
                           c = read ((splitOn "=" var)!!1) :: Integer
+
+eval :: String -> String -> String
+eval s args = case (parseExpr s) of
+                  Left  err   -> show err
+                  Right expr  -> show (evalE (getLookup (splitArgs args)) (expr))
