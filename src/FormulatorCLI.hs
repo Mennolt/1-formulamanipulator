@@ -1,8 +1,8 @@
 {-|
 Module      : FormulatorCLI
 Description : The command-line interface for the formulator program
-Copyright   : STUDENT NAME 1 (ID)
-              STUDENT NAME 2 (ID)
+Copyright   : Mennolt van Alten (1289667)
+              Ignacio Jordano de Castro (1769626)
 
 The command-line interface for the formulator program. Parses and processes
 command-line arguments. Manipulates expressions according to the specification
