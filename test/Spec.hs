@@ -61,25 +61,25 @@ main = hspec $ do
 
     describe "evalE" $ do
       it "should convert (Plus (Const 1) (Const 1)) to 2" $ do
-        evalE id (Plus (Const 1) (Const 1)) `shouldBe` (2 :: Int)
+        evalE id (Plus (Const 1) (Const 1)) `shouldBe` (2 :: Integer)
 
       it "should convert (Mult (Const 3) (Const 4)) to 12" $ do
-        evalE id (Mult (Const 3) (Const 4)) `shouldBe` (12 :: Int)
+        evalE id (Mult (Const 3) (Const 4)) `shouldBe` (12 :: Integer)
       
       it "should have tests" $ do
-        evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Int)
+        evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Integer)
 
     describe "simplifyE" $ do
       it "should simplify Plus (Const 1) (Const 1) to Const 2" $ do
-        simplifyE (Plus (Const 1) (Const 1)) `shouldBe` (Const 2:: Expr String Int)
+        simplifyE (Plus (Const 1) (Const 1)) `shouldBe` (Const 2:: Expr String Integer)
       it "should simplify Plus (Var \"x\") (Const 0) to Var \"x\"" $ do
-        simplifyE (Plus (Var "x") (Const 0)) `shouldBe` (Var "x":: Expr String Int)
+        simplifyE (Plus (Var "x") (Const 0)) `shouldBe` (Var "x":: Expr String Integer)
       it "should simplify Mult (Const 2) (Const 2) to Const 4" $ do
-        simplifyE (Plus (Const 2) (Const 2)) `shouldBe` (Const 4:: Expr String Int)
+        simplifyE (Plus (Const 2) (Const 2)) `shouldBe` (Const 4:: Expr String Integer)
       it "should simplify Mult (Var \"x\") (Const 0) to Const 0" $ do
-        simplifyE (Mult (Var "x") (Const 0)) `shouldBe` (Const 0:: Expr String Int)
+        simplifyE (Mult (Var "x") (Const 0)) `shouldBe` (Const 0:: Expr String Integer)
       it "should simplify Mult (Var \"x\") (Const 1) to Var \"x\"" $ do
-        simplifyE (Mult (Var "x") (Const 1)) `shouldBe` (Var "x":: Expr String Int)
+        simplifyE (Mult (Var "x") (Const 1)) `shouldBe` (Var "x":: Expr String Integer)
 
 
     describe "diffE" $ do
@@ -100,6 +100,11 @@ main = hspec $ do
 
   describe "FormulatorCLI" $ do
     describe "processCLIArgs" $ do
-      it "should have tests" $ do
-        (1 :: Integer) `shouldBe` (1 :: Integer)
+      it "should print [\"-p\",\"1+1\"] as 1+1" $ do
+        processCLIArgs ["-p","1+1"] `shouldBe` "1+1"
+      it "should print [\"--print\",\"1+1\"] as 1+1" $ do
+        processCLIArgs ["--print","1+1"] `shouldBe` "1+1"
+
+      it "should simplify [\"-s\", (Plus (Const 1) (Const 0))] to Const 1" $ do
+        processCLIArgs ["-s", "(Plus (Const 1) (Const 0))"] `shouldBe` "Const 1"
 

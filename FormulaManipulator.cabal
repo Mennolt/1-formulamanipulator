@@ -1,8 +1,8 @@
 cabal-version:        3.4
 name:                 FormulaManipulator
 version:              0.0.0.1
-author:               Huub de Beer
-maintainer:           h.t.d.beer@tue.nl
+author:               Mennolt van Alten & Ignacio Jordano de Castro
+maintainer:           m.v.alten@student.tue.nl
 extra-source-files:   README.md
 
 executable formulator
