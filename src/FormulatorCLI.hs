@@ -26,11 +26,11 @@ import           FormulaManipulator             ( printE
 
 
 processCLIArgs :: [String] -> String
-processCLIArgs as | as!!0 == "--p" || as!!0 == "--print" = display (as!!1)
-                  | as!!0 == "--s" || as!!0 == "--simplify" = simplify (as!!1)
-                  | as!!0 == "--d" || as!!0 == "--differentiate" = diff (as!!2) (as!!1)
-                  | as!!0 == "--e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
-                  | as!!0 == "--h" || as!!0 == "--help" = help
+processCLIArgs as | as!!0 == "-p" || as!!0 == "--print" = display (as!!1)
+                  | as!!0 == "-s" || as!!0 == "--simplify" = simplify (as!!1)
+                  | as!!0 == "-d" || as!!0 == "--differentiate" = diff (as!!2) (as!!1)
+                  | as!!0 == "-e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
+                  | as!!0 == "-h" || as!!0 == "--help" = help
                   | otherwise = error "Unexpected option"
                     where
                       help = "- Usage: \

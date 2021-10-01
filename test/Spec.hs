@@ -31,11 +31,11 @@ main = hspec $ do
 
       it "should convert (Plus (Const (-21)) (Plus (Const 7) (Mult (Const 279) (Var \"y\")))) to \"((-21) + (7 + 279 * y))\"" $ do
         printE (Plus (Const (-21)) (Plus (Const 7) (Mult (Const 279) (Var "y")))) 
-        `shouldBe` ("((-21) + (7 + 279 * y))" :: String)
+        `shouldBe` ("((-21) + (7 + (279 * y)))" :: String)
 
       it "should convert Mult (Plus (Var \"x\") (Const (-1))) (Plus (Var \"x\") (Const 1)) to \"((x + (-1)) * (x + 1))\"" $ do
         printE (Mult (Plus (Var "x") (Const (-1))) (Plus (Var "x") (Const 1))) 
-        `shouldBe` ("(x + (-1)) * (x + 1)" :: String)
+        `shouldBe` ("((x + (-1)) * (x + 1))" :: String)
       
 
     describe "parseExpr . printE" $ do
@@ -101,10 +101,45 @@ main = hspec $ do
   describe "FormulatorCLI" $ do
     describe "processCLIArgs" $ do
       it "should print [\"-p\",\"1+1\"] as 1+1" $ do
-        processCLIArgs ["-p","1+1"] `shouldBe` "1+1"
+        processCLIArgs ["-p","1+1"] `shouldBe` "(1 + 1)"
       it "should print [\"--print\",\"1+1\"] as 1+1" $ do
-        processCLIArgs ["--print","1+1"] `shouldBe` "1+1"
+        processCLIArgs ["--print","1+1"] `shouldBe` "(1 + 1)"
+      it "should print [\"--print\",\"hello\"] as hello" $ do
+        processCLIArgs ["--print","hello"] `shouldBe` "hello"
+      it "should print [\"-p\",\"hello\"] as hello" $ do
+        processCLIArgs ["-p","hello"] `shouldBe` "hello"
+      it "should print [\"-p\",\"-1\"] as (-1)" $ do
+        processCLIArgs ["-p","-1"] `shouldBe` "(-1)"
+      it "should print [\"--print\",\"-1\"] as (-1)" $ do
+        processCLIArgs ["--print","-1"] `shouldBe` "(-1)"
 
-      it "should simplify [\"-s\", (Plus (Const 1) (Const 0))] to Const 1" $ do
-        processCLIArgs ["-s", "(Plus (Const 1) (Const 0))"] `shouldBe` "Const 1"
+      it "should print [\"--print\",\"((x + (-1)) * (x + 1))\"] as ((x + (-1)) * (x + 1))" $ do
+        processCLIArgs ["--print","((x + (-1)) * (x + 1))"] `shouldBe` "((x + (-1)) * (x + 1))"
+      it "should print [\"-p\",\"((x + (-1)) * (x + 1))\"] as ((x + (-1)) * (x + 1))" $ do
+        processCLIArgs ["-p","((x + (-1)) * (x + 1))"] `shouldBe` "((x + (-1)) * (x + 1))"
+
+      it "should simplify [\"-s\", \"1+0\"] to 1" $ do
+        processCLIArgs ["-s", "1+0"] `shouldBe` "1"
+      it "should simplify [\"--simplify\", \"1+0\"] to 1" $ do
+        processCLIArgs ["-s", "1+0"] `shouldBe` "1"
+      it "should simplify [\"-s\", \"5+6\"] to 11" $ do
+        processCLIArgs ["-s", "5+6"] `shouldBe` "11"
+      it "should simplify [\"--simplify\", \"5+6\"] to 11" $ do
+        processCLIArgs ["-s", "5+6"] `shouldBe` "11"
+      it "should simplify [\"-s\", \"5*6\"] to 30" $ do
+        processCLIArgs ["-s", "5*6"] `shouldBe` "30"
+      it "should simplify [\"--simplify\", \"5*6\"] to 30" $ do
+        processCLIArgs ["-s", "5*6"] `shouldBe` "30"
+        
+      it "should simplify [\"-s\", \"0*x\"] to 0" $ do
+        processCLIArgs ["-s", "0*x"] `shouldBe` "0"
+      it "should simplify [\"--simplify\", \"0*x\"] to 0" $ do
+        processCLIArgs ["-s", "0*x"] `shouldBe` "0"
+
+      it "should simplify [\"-s\", \"1*x\"] to x" $ do
+        processCLIArgs ["-s", "1*x"] `shouldBe` "x"
+      it "should simplify [\"--simplify\", \"1*x\"] to x" $ do
+        processCLIArgs ["-s", "1*x"] `shouldBe` "x"
+
+      
 
