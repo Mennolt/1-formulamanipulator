@@ -118,6 +118,8 @@ main = hspec $ do
       it "should print [\"-p\",\"((x + (-1)) * (x + 1))\"] as ((x + (-1)) * (x + 1))" $ do
         processCLIArgs ["-p","((x + (-1)) * (x + 1))"] `shouldBe` "((x + (-1)) * (x + 1))"
 
+
+
       it "should simplify [\"-s\", \"1+0\"] to 1" $ do
         processCLIArgs ["-s", "1+0"] `shouldBe` "1"
       it "should simplify [\"--simplify\", \"1+0\"] to 1" $ do
@@ -141,7 +143,32 @@ main = hspec $ do
       it "should simplify [\"--simplify\", \"1*x\"] to x" $ do
         processCLIArgs ["--simplify", "1*x"] `shouldBe` "x"
 
-        
+      it "should print a help message when -h is called" $ do
+        processCLIArgs ["-h"] `shouldBe` "- Usage: \
+                              \formulator -- OPTION EXPR \
+
+                              \-p, --print: pretty-print the expression \
+                              \-s, --simplify: simplify and pretty-print the expression \
+                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \
+                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table. \
+                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons. \
+                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\
+                              \h, --help: Show this help message."
+      it "should print a help message when --help is called" $ do
+        processCLIArgs ["--help"] `shouldBe` "- Usage: \
+                              \formulator -- OPTION EXPR \
+
+                              \-p, --print: pretty-print the expression \
+                              \-s, --simplify: simplify and pretty-print the expression \
+                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \
+                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table. \
+                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons. \
+                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\
+                              \h, --help: Show this help message."
+
+      
+
+
 
       
 
