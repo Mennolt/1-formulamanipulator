@@ -68,7 +68,20 @@ printE = foldE printConst id printPlus printMult
       printMult a b = "(" ++ a ++ " * " ++ b ++ ")"
 
 
+<<<<<<< HEAD
 evalE :: (a -> Integer) -> Expr a Integer -> Integer
+=======
+
+{- |evalE is a function that evaluates a function given a list of variables to look up and an Expr
+
+  It takes two arguments: one converting the type of a variable into an integer, and one of type Expr that will be evaluated.
+
+  It returns an integer.
+-}
+
+evalE :: (a -> Integer) -> (Expr a Integer) -> Integer
+
+>>>>>>> f7d59cf656eeea45a7912ccb4b156febda953d9d
 evalE lookup = foldE evalConst lookup evalPlus evalMult
 
 evalConst :: Integer -> Integer

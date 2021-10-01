@@ -24,14 +24,28 @@ import           FormulaManipulator             ( printE
                                                 , diffE
                                                 )
 
+{- |processCLIArgs takes input from the commandline and uses it to run a function. 
 
+It has the functions print, simplify, differentiate, evaluate and help. To see more details build the project then run cabal exec formulator -- -h to bring up the help message.
+
+The input is a list of strings: Firstly the option picked, then any additional info for this function, and finally an expression to run the function on.
+
+The output is a single string that will be printed to the commandline, usually an pretty printed expression.
+-}
 processCLIArgs :: [String] -> String
 processCLIArgs as | as!!0 == "-p" || as!!0 == "--print" = display (as!!1)
                   | as!!0 == "-s" || as!!0 == "--simplify" = simplify (as!!1)
+<<<<<<< HEAD
                   | as!!0 == "-d" || as!!0 == "--differentiate" = diff (as!!1) (as!!2)
                   | as!!0 == "-e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
                   | as!!0 == "-h" || as!!0 == "--help" = help
                   | otherwise = error "Unexpected option, use -h to display help"
+=======
+                  | as!!0 == "-d" || as!!0 == "--differentiate" = diff (as!!2) (as!!1)
+                  | as!!0 == "-e" || as!!0 == "--evaluate" = eval (as!!1) (as!!2)
+                  | as!!0 == "-h" || as!!0 == "--help" = help
+                  | otherwise = error "Unexpected option"
+>>>>>>> f7d59cf656eeea45a7912ccb4b156febda953d9d
                     where
                       help = "Usage: \
                               \formulator -- OPTION EXPR\n\
@@ -58,7 +72,7 @@ diff var s = case (parseExpr s) of
                   Left  err   -> show err
                   Right expr  -> printE (simplifyE (diffE var expr))
 
--- splits a string of statements delimited into
+-- splits a string of statements delimited by ; into a list of each statement seperately
 splitArgs :: String -> [String]
 splitArgs = splitOn ";"
 

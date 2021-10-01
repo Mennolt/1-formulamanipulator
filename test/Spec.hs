@@ -66,7 +66,11 @@ main = hspec $ do
       it "should convert (Mult (Const 3) (Const 4)) to 12" $ do
         evalE id (Mult (Const 3) (Const 4)) `shouldBe` (12 :: Integer)
       
+<<<<<<< HEAD
       it "should have convert (\v -> if v == \"x\" then 4 else error \"unknown variable\") (Mult (Var \"x\") (Const 4)) to 12" $ do
+=======
+      it "should convert (Mult (Var \"x\") (Const 3) where x = 4 to 12" $ do
+>>>>>>> f7d59cf656eeea45a7912ccb4b156febda953d9d
         evalE (\v -> if v == "x" then 4 else error "unknown variable") (Mult (Var "x") (Const 3)) `shouldBe` (12 :: Integer)
 
     describe "simplifyE" $ do
@@ -100,6 +104,7 @@ main = hspec $ do
 
   describe "FormulatorCLI" $ do
     describe "processCLIArgs" $ do
+<<<<<<< HEAD
       --Differentiate
       it "Constant derivation: should differentiate 1 to  0" $ do
         processCLIArgs ["-d", "x", "1"] `shouldBe` ("0")
@@ -132,4 +137,79 @@ main = hspec $ do
       --Error
       it "should throw Unexpected option error" $ do
          evaluate(processCLIArgs ["-f", "", "1 + 1"]) `shouldThrow` errorCall "Unexpected option, use -h to display help"
+=======
+      it "should print [\"-p\",\"1+1\"] as 1+1" $ do
+        processCLIArgs ["-p","1+1"] `shouldBe` "(1 + 1)"
+      it "should print [\"--print\",\"1+1\"] as 1+1" $ do
+        processCLIArgs ["--print","1+1"] `shouldBe` "(1 + 1)"
+      it "should print [\"--print\",\"hello\"] as hello" $ do
+        processCLIArgs ["--print","hello"] `shouldBe` "hello"
+      it "should print [\"-p\",\"hello\"] as hello" $ do
+        processCLIArgs ["-p","hello"] `shouldBe` "hello"
+      it "should print [\"-p\",\"-1\"] as (-1)" $ do
+        processCLIArgs ["-p","-1"] `shouldBe` "(-1)"
+      it "should print [\"--print\",\"-1\"] as (-1)" $ do
+        processCLIArgs ["--print","-1"] `shouldBe` "(-1)"
+
+      it "should print [\"--print\",\"((x + (-1)) * (x + 1))\"] as ((x + (-1)) * (x + 1))" $ do
+        processCLIArgs ["--print","((x + (-1)) * (x + 1))"] `shouldBe` "((x + (-1)) * (x + 1))"
+      it "should print [\"-p\",\"((x + (-1)) * (x + 1))\"] as ((x + (-1)) * (x + 1))" $ do
+        processCLIArgs ["-p","((x + (-1)) * (x + 1))"] `shouldBe` "((x + (-1)) * (x + 1))"
+
+
+
+      it "should simplify [\"-s\", \"1+0\"] to 1" $ do
+        processCLIArgs ["-s", "1+0"] `shouldBe` "1"
+      it "should simplify [\"--simplify\", \"1+0\"] to 1" $ do
+        processCLIArgs ["--simplify", "1+0"] `shouldBe` "1"
+      it "should simplify [\"-s\", \"5+6\"] to 11" $ do
+        processCLIArgs ["-s", "5+6"] `shouldBe` "11"
+      it "should simplify [\"--simplify\", \"5+6\"] to 11" $ do
+        processCLIArgs ["--simplify", "5+6"] `shouldBe` "11"
+      it "should simplify [\"-s\", \"5*6\"] to 30" $ do
+        processCLIArgs ["-s", "5*6"] `shouldBe` "30"
+      it "should simplify [\"--simplify\", \"5*6\"] to 30" $ do
+        processCLIArgs ["--simplify", "5*6"] `shouldBe` "30"
+        
+      it "should simplify [\"-s\", \"0*x\"] to 0" $ do
+        processCLIArgs ["-s", "0*x"] `shouldBe` "0"
+      it "should simplify [\"--simplify\", \"0*x\"] to 0" $ do
+        processCLIArgs ["--simplify", "0*x"] `shouldBe` "0"
+
+      it "should simplify [\"-s\", \"1*x\"] to x" $ do
+        processCLIArgs ["-s", "1*x"] `shouldBe` "x"
+      it "should simplify [\"--simplify\", \"1*x\"] to x" $ do
+        processCLIArgs ["--simplify", "1*x"] `shouldBe` "x"
+
+      it "should print a help message when -h is called" $ do
+        processCLIArgs ["-h"] `shouldBe` "- Usage: \
+                              \formulator -- OPTION EXPR \
+
+                              \-p, --print: pretty-print the expression \
+                              \-s, --simplify: simplify and pretty-print the expression \
+                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \
+                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table. \
+                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons. \
+                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\
+                              \h, --help: Show this help message."
+      it "should print a help message when --help is called" $ do
+        processCLIArgs ["--help"] `shouldBe` "- Usage: \
+                              \formulator -- OPTION EXPR \
+
+                              \-p, --print: pretty-print the expression \
+                              \-s, --simplify: simplify and pretty-print the expression \
+                              \-d,--differentiate <VAR>: differentiate expression for <VAR> and simplify and pretty-print the result \
+                              \-e, --evaluate <LOOKUP>: evaluate the expression given the <LOOKUP> table. \
+                              \   The lookup table is a String containing a list of <VAR>=<VALUE> pairs separated by semicolons. \
+                              \   For example, \"x=4;y=5\" should give x the value 4 and y the value 5.\
+                              \h, --help: Show this help message."
+
+      
+
+
+
+      
+
+      
+>>>>>>> f7d59cf656eeea45a7912ccb4b156febda953d9d
 
